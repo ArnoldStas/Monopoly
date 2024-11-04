@@ -12,12 +12,15 @@ public class Menu {
         {
             System.out.print("\033\143");
 
-            System.out.println("*** Menu ***");
-            System.out.println("1. Play");
-            System.out.println("2. Settings");
-            System.out.println("3. Exit");
+            Logo.logoPrint();
 
-            System.out.print("Choice: ");
+            System.out.println();
+            System.out.println("                               *** Menu ***");
+            System.out.println("                               1. Play");
+            System.out.println("                               2. Settings");
+            System.out.println("                               3. Exit");
+
+            System.out.print(Color.RED + "Choice: " + Color.RESET);
             if (scanner.hasNextInt()) {
                 Choose = scanner.nextInt();
             } else {
