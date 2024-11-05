@@ -14,16 +14,11 @@ import com.monopoly.Table.monopolyTable;
 
 public class Main {
     private static LinkedList<monopolyTable> MNPN = new LinkedList<>();
+    private static Settings parametrai = new Settings();
     private static int currentIndex = 0;
     public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
-        Queue<actorPlay> playerQueue = new LinkedList<>();
-        Integer Choose = Menu.menu(scanner);
-
-        if (Choose == 1)
-        {
-            Player.getPlayers(scanner, playerQueue);
-        }
+        Menu(scanner);
 
         Gson gson = new Gson();
 
@@ -42,23 +37,35 @@ public class Main {
                 System.out.println(printmnp.toString());
             }*/
 
-            System.out.println("\nSimulating circular traversal:");
+            /*System.out.println("\nSimulating circular traversal:");
             for (int i = 0; i < 20; i++) {
                 monopolyTable block = getNextMonopolyBlock();
                 System.out.println(block.getinfo());
-            }
+            }*/
 
         } catch (JsonSyntaxException | JsonIOException | IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println();
-        System.out.println("Players in queue:");
-        for (actorPlay player : playerQueue) {
-            System.out.println(player.getname());
-        }
-
         scanner.close();
+    }
+
+    public static void Menu(Scanner scanner)
+    {
+        Integer Choose = Menu.menu(scanner);
+
+        if (Choose == 1)
+        {
+            Player.getPlayers(scanner);
+        }
+        else if (Choose == 2)
+        {
+            parametrai.currentSettings(scanner);
+        }
+        else
+        {
+
+        }
     }
 
     // Get the next Monopoly block, with circular behavior

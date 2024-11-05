@@ -15,7 +15,8 @@ public class Menu {
             Logo.logoPrint();
 
             System.out.println();
-            System.out.println("                               *** Menu ***");
+            System.out.println(Color.GREEN + "                                | Menu |" + Color.RESET);
+            System.out.println();
             System.out.println("                               1. Play");
             System.out.println("                               2. Settings");
             System.out.println("                               3. Exit");
