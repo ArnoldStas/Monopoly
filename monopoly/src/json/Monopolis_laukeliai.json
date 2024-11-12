@@ -27,7 +27,7 @@
     },
     {
         "id": 2,
-        "title": "Žirmūnai street",
+        "title": "Vilniaus street",
         "type": "Street",
         "color": "Red",
         "owner": null,
@@ -105,7 +105,7 @@
     },
     {
         "id": 8,
-        "title": "A. Goštauto gatvė",
+        "title": "A. Narbuto Street",
         "type": "Street",
         "color": "Orange",
         "owner": null,

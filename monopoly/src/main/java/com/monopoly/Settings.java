@@ -148,7 +148,7 @@ public class Settings {
             }
             System.out.println();
 
-        } while(choice < 1 || choice > 4);
+        } while(choice < 1 || choice > 5);
 
         if (choice == 1)
         {
@@ -168,7 +168,7 @@ public class Settings {
         }
         else
         {
-            Main.Menu(scanner);
+            currentSettings(scanner);
         }
     }
 

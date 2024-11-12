@@ -19,7 +19,8 @@ public class Menu {
             System.out.println();
             System.out.println("                               1. Play");
             System.out.println("                               2. Settings");
-            System.out.println("                               3. Exit");
+            System.out.println("                               3. Edit table");
+            System.out.println("                               4. Exit");
 
             System.out.print(Color.RED + "Choice: " + Color.RESET);
             if (scanner.hasNextInt()) {
@@ -30,7 +31,7 @@ public class Menu {
             }
             System.out.println();
 
-        } while(Choose < 1 || Choose > 3);
+        } while(Choose < 1 || Choose > 4);
 
         return Choose;
     }

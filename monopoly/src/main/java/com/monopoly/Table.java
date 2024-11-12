@@ -1,5 +1,7 @@
 package com.monopoly;
 
+import java.util.LinkedList;
+
 public class Table {
     public static class monopolyTable
 {
@@ -16,7 +18,10 @@ public class Table {
     private String info;
 
     public String toString() {
-        return "Block: {id = " + id + ", title = " + title + ", type = " + type + ", color = " + color + ", owner = " + owner + ", price = " + price + ", rent = " + rent + ", fine = " + fine + ", skip = " + skip + ", win = " + win + ", info = " + info + "}";
+        return String.format(
+            "Block: {%d, %s, %s, %s, %s, %d, %d, %d, %d, %d, - '%s'}",
+            id, title, type, color, owner, price, rent, fine, skip, win, info
+        );
     }
 
     public Integer getid()
@@ -73,5 +78,14 @@ public class Table {
     {
         return info;
     }
+  }
+    public static int getNextMonopolyBlock(LinkedList<monopolyTable> MNPN, int currentIndex) {
+    if (MNPN.isEmpty()) {
+        return currentIndex;
+    }
+
+    monopolyTable currentBlock = MNPN.get(currentIndex);
+    System.out.println(currentBlock.toString());
+    return (currentIndex + 1) % MNPN.size();
   }
 }
