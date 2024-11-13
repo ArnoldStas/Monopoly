@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
+import com.monopoly.Table.monopolyTable;
+
 public class Player {
     public static class actorPlay 
 {
@@ -54,7 +56,7 @@ public class Player {
     }
   }
 
-    static void getPlayers(Scanner scanner)
+    static void getPlayers(Scanner scanner, Settings settings, LinkedList<monopolyTable> MNPN)
     {
         Queue<actorPlay> playerQueue = new LinkedList<>();
         System.out.print("\033\143");
@@ -64,26 +66,81 @@ public class Player {
             scanner.nextLine();
         }
 
-        String Player1 = getPlayerName(scanner, "1-st Player name: ");
-        String Player2 = getPlayerName(scanner, "2-nd Player name: ");
-        String Player3 = getPlayerName(scanner, "3-th Player name: ");
-
-        actorPlay Actor1 = new actorPlay(Player1);
-        actorPlay Actor2 = new actorPlay(Player2);
-        actorPlay Actor3 = new actorPlay(Player3);
-
-        playerQueue.add(Actor1);
-        playerQueue.add(Actor2);
-        playerQueue.add(Actor3);
-
         System.out.println();
-        System.out.println("Players in queue:");
-        for (actorPlay player : playerQueue) {
-            System.out.println(player.getname());
+        System.out.println(Color.CYAN + "| Create name |" + Color.RESET);
+        System.out.println();
+
+        if (settings.playerCount == 2) {
+            String Player1 = getPlayerName(scanner, "1-st Player name: ");
+            String Player2 = getPlayerName(scanner, "2-nd Player name: ");
+
+            if (Player1.equals(Player2)) {
+
+                do
+                {
+
+                    if (Player1.equals(Player2)) {
+                        System.out.println(Color.RED + "The name '" + Player1 + "' already exists!" + Color.RESET);
+                    }
+                    Player2 = getPlayerName(scanner, "2-nd Player name: ");
+
+                } while(Player1.equals(Player2));
+
+            }
+
+            actorPlay Actor1 = new actorPlay(Player1);
+            actorPlay Actor2 = new actorPlay(Player2);
+
+            playerQueue.add(Actor1);
+            playerQueue.add(Actor2);
         }
-        System.out.println();
-        System.out.print("Peek: ");
-        displayPlayers(playerQueue);
+        else {
+            String Player1 = getPlayerName(scanner, "1-st Player name: ");
+            String Player2 = getPlayerName(scanner, "2-nd Player name: ");
+
+            if (Player1.equals(Player2)) {
+
+                do
+                {
+
+                    if (Player1.equals(Player2)) {
+                        System.out.println(Color.RED + "The name '" + Player1 + "' already exists!" + Color.RESET);
+                    }
+                    Player2 = getPlayerName(scanner, "2-nd Player name: ");
+
+                } while(Player1.equals(Player2));
+
+            }
+
+            String Player3 = getPlayerName(scanner, "3-th Player name: ");
+
+            if (Player3.equals(Player2) || Player3.equals(Player1)) {
+
+                do
+                {
+
+                    if (Player3.equals(Player2)) {
+                        System.out.println(Color.RED + "The name '" + Player2 + "' already exists!" + Color.RESET);
+                    }
+                    if (Player3.equals(Player1)) {
+                        System.out.println(Color.RED + "The name '" + Player1 + "' already exists!" + Color.RESET);
+                    }
+                    Player3 = getPlayerName(scanner, "3-th Player name: ");
+
+                } while(Player3.equals(Player2) || Player3.equals(Player1));
+
+            }
+
+            actorPlay Actor1 = new actorPlay(Player1);
+            actorPlay Actor2 = new actorPlay(Player2);
+            actorPlay Actor3 = new actorPlay(Player3);
+
+            playerQueue.add(Actor1);
+            playerQueue.add(Actor2);
+            playerQueue.add(Actor3);
+        }
+
+        displayPlayers(playerQueue, settings, scanner, MNPN);
     }
 
     private static String getPlayerName(Scanner scanner, String message)
@@ -94,51 +151,83 @@ public class Player {
         return name;
     }
 
-    static void displayPlayers(Queue<actorPlay> playerQueue) 
+    static void displayPlayers(Queue<actorPlay> playerQueue, Settings settings, Scanner scanner, LinkedList<monopolyTable> MNPN) 
     {
-        
-        /*String tempName = null;
-        String peekName = null;
-    
-        do 
-        {
-            actorPlay playerTemp = playerQueue.poll();
-            actorPlay playerPeek = playerQueue.peek();
-            
-            if (playerTemp != null) {
-                tempName = playerTemp.getname();
-                System.out.println(tempName);
-                playerQueue.add(playerTemp);
-            }
 
-            peekName = playerPeek.getname();
-            
-        } while (peekName != null && !tempName.equals(peekName));*/
-
-        Queue<actorPlay> playerQueueTemp = new LinkedList<>();
-
-        String playerPeekName = null;
-        String playerTempName = null;
-
-        actorPlay playerPeek = playerQueue.peek();
-        playerPeekName = playerPeek.getname();
-
-        actorPlay playerTemp = playerQueue.poll();
-        playerTempName = playerTemp.getname();
-        System.out.println(playerTemp.getname());
-        playerQueueTemp.add(playerTemp);
-        playerQueue.add(playerTemp);
+        char symbol;
 
         do
         {
+            System.out.print("\033\143");
+            Logo.logoPrint();
 
-            playerTemp = playerQueue.poll();
-            playerTempName = playerTemp.getname();
-            System.out.println(playerTemp.getname());
-            playerQueueTemp.add(playerTemp);
-            playerQueue.add(playerTemp);
+            Integer playerCount = settings.playerCount;
+            Boolean playerCountEqual3 = false;
+            if (playerCount == 3) playerCountEqual3 = true;
 
-        } while(!playerTempName.equals(playerPeekName));
+            System.out.println(Color.CYAN + "| Players in game |" + Color.RESET);
+            System.out.println();
+
+            for (actorPlay player : playerQueue) {
+                if (playerCountEqual3) {
+                    if (playerCount == 3) {
+                        System.out.print(Color.RED + "1'st player name: " + Color.RESET);
+                        playerCount--;
+                    }
+                    else if (playerCount == 2) {
+                        System.out.print(Color.RED + "2'nd player name: " + Color.RESET);
+                        playerCount--;
+                    }
+                    else {
+                        System.out.print(Color.RED + "3'th player name: " + Color.RESET);
+                        playerCount--;
+                    }
+                }
+                else {
+                    if (playerCount == 2) {
+                        System.out.print(Color.RED + "1'st player name: " + Color.RESET);
+                        playerCount--;
+                    }
+                    else {
+                        System.out.print(Color.RED + "2'nd player name: " + Color.RESET);
+                        playerCount--;
+                    }
+                }
+                System.out.println(player.getname());
+
+                System.out.print(Color.GREEN + "Money: " + Color.RESET);
+                System.out.println(player.getMoney());
+
+                System.out.print(Color.GREEN + "Count of own streets: " + Color.RESET);
+                System.out.println(player.getcountStreets());
+
+                System.out.print(Color.GREEN + "The streets: " + Color.RESET);
+                System.out.println("null");
+
+                System.out.print(Color.GREEN + "In jail? (skip moves): " + Color.RESET);
+                System.out.println(player.getskipMove());
+
+                System.out.print(Color.GREEN + "Current box ID: " + Color.RESET);
+                System.out.println(player.getboxId());
+
+                System.out.println();
+
+            }
+
+                System.out.print(Color.YELLOW + "Do you want to continue? (Y/N): " + Color.RESET);
+                String input = scanner.next();
+                symbol = input.charAt(0);
+
+        } while (symbol != 'Y' && symbol != 'y' && symbol != 'N' && symbol != 'n');
+
+        if (symbol == 'Y' || symbol == 'y') {
+            Play game = new Play();
+            game.playTime(scanner, settings, playerQueue, MNPN);
+        }
+        else
+        {
+            Main.Menu(scanner);
+        }
 
     }
     

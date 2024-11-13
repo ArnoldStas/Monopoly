@@ -22,7 +22,7 @@ public class Main {
 
         if (Choose == 1)
         {
-            Player.getPlayers(scanner);
+            Player.getPlayers(scanner, parametrai, MNPN);
         }
         else if (Choose == 2)
         {

@@ -5,17 +5,17 @@ import java.util.LinkedList;
 public class Table {
     public static class monopolyTable
 {
-    private Integer id;
-    private String title;
-    private String type;
-    private String color;
-    private String owner;
-    private Integer price;
-    private Integer rent;
-    private Integer fine;
-    private Integer skip;
-    private Integer win;
-    private String info;
+    public Integer id;
+    public String title;
+    public String type;
+    public String color;
+    public String owner;
+    public Integer price;
+    public Integer rent;
+    public Integer fine;
+    public Integer skip;
+    public Integer win;
+    public String info;
 
     public String toString() {
         return String.format(
