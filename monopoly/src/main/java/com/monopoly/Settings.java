@@ -20,7 +20,7 @@ public class Settings {
     Settings() {
         playerCount = 3;
         diceCount = 1;
-        moneyToWin = 1500;
+        moneyToWin = 2500;
         changeSettings = false;
         changedPlayerCount = false;
         changedDiceCount = false;
@@ -262,7 +262,7 @@ public class Settings {
             }
             System.out.println();
 
-        } while(changeMoney < 1500 || changeMoney == moneyToWin);
+        } while(changeMoney < 2500 || changeMoney == moneyToWin);
 
         moneyToWin = changeMoney;
         changedAmountOfMoney = true;

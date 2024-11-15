@@ -1,6 +1,8 @@
 package com.monopoly;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -9,17 +11,17 @@ import com.monopoly.Table.monopolyTable;
 public class Player {
     public static class actorPlay 
 {
-    private Integer Money;
-    private Integer countStreets;
-    private String Streets[];
-    private Integer skipMove;
-    private Integer boxId;
+    public Integer Money;
+    public Integer countStreets;
+    public List<String> Streets;
+    public Integer skipMove;
+    public Integer boxId;
     public String name;
 
     actorPlay(String name) {
         Money = 1500;
         countStreets = 0;
-        Streets = new String[0];
+        Streets = new ArrayList<>();
         skipMove = 0;
         boxId = 0;
         this.name = name;
@@ -37,7 +39,7 @@ public class Player {
 
     public String[] getStreets()
     {
-        return Streets;
+        return Streets.toArray(new String[0]);
     }
 
     public Integer getskipMove()
