@@ -16,62 +16,76 @@ public class Play {
 
         playerTurn(playerQueue, MNPN, scanner, settings);
 
-        
-
     }
 
     public void playerTurn(Queue<actorPlay> playerQueue, LinkedList<monopolyTable> MNPN, Scanner scanner, Settings settings)
     {
 
-        System.out.print("\033\143");
-        Logo.logoPrint();
+        actorPlay player;
 
-        System.out.println();
-        System.out.println(Color.CYAN  + "| GAME |" + Color.RESET);
-        System.out.println();
+        do
+        {
+            System.out.print("\033\143");
+            Logo.logoPrint();
 
-        System.out.print(Color.PURPLE + "Player turn: " + Color.RESET);
+            System.out.println();
+            System.out.println(Color.CYAN  + "| GAME |" + Color.RESET);
+            System.out.println();
 
-        String playerName = null;
+            System.out.print(Color.PURPLE + "Player turn: " + Color.RESET);
 
-        actorPlay player = playerQueue.poll();
-        playerName = player.getname();
-        System.out.print(playerName);
-        playerQueue.add(player);
+            String playerName = null;
 
-        System.out.println("\n");
-        System.out.println(Color.GREEN + playerName + "'s current box ID: " + Color.RESET + player.getboxId());
-        System.out.println(Color.YELLOW + "Title: " + Color.RESET + MNPN.get(player.getboxId()).title + Color.RED + " [" + MNPN.get(player.getboxId()).gettype() + "]" + Color.RESET);
+            player = playerQueue.poll();
+            playerName = player.getname();
+            System.out.print(playerName);
+            playerQueue.add(player);
 
-        Integer diceNumber = dice(scanner, settings);
+            System.out.println("\n");
+            System.out.println(Color.GREEN + playerName + "'s current box ID: " + Color.RESET + player.getboxId());
+            System.out.println(Color.YELLOW + "Title: " + Color.RESET + MNPN.get(player.getboxId()).title + Color.RED + " [" + MNPN.get(player.getboxId()).gettype() + "]" + Color.RESET);
 
-        player.boxId = player.boxId + 1;
-        player.boxId = player.boxId % MNPN.size();
+            if (player.skipMove > 0) {
+                System.out.println();
+                player.skipMove = player.skipMove - 1;
+                System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] is currently in jail! Moves to skip left -" + Color.RESET + " " + Color.RED + player.skipMove + Color.RESET);
+                playerStats(player);
+                sleep();
+            } else {
+                Integer diceNumber = dice(scanner, settings);
 
-        System.out.println();
-        System.out.println(Color.GREEN + playerName + " moved to box ID: " + Color.RESET + player.getboxId());
-        System.out.println(Color.YELLOW + "Title: " + Color.RESET + MNPN.get(player.getboxId()).title + Color.RED + " [" + MNPN.get(player.getboxId()).gettype() + "]" + Color.RESET);
+                player.boxId = player.boxId + diceNumber;
+                player.boxId = player.boxId % MNPN.size();
 
-        if (MNPN.get(player.getboxId()).type.equals("Lottery")) {
-            Lottery(player, MNPN);
+                System.out.println();
+                System.out.println(Color.GREEN + playerName + " moved to box ID: " + Color.RESET + player.getboxId());
+                System.out.println(Color.YELLOW + "Title: " + Color.RESET + MNPN.get(player.getboxId()).title + Color.RED + " [" + MNPN.get(player.getboxId()).gettype() + "]" + Color.RESET);
+
+                if (MNPN.get(player.getboxId()).type.equals("Lottery")) {
+                    Lottery(player, MNPN);
+                }
+
+                if (MNPN.get(player.getboxId()).type.equals("Prison")) {
+                    Jail(player, MNPN);
+                }
+
+                if (MNPN.get(player.getboxId()).type.equals("Fine")) {
+                    FineForParking(player, MNPN);
+                }
+
+                if (MNPN.get(player.getboxId()).type.equals("Start")) {
+                    Beggining(player, MNPN);
+                }
+
+                if (MNPN.get(player.getboxId()).type.equals("Street")) {
+                    Street(player, MNPN, scanner, playerQueue);
+                }
+            }
+        } while(player.getMoney() < settings.moneyToWin);
+
+        if (player.getMoney() >= settings.moneyToWin) {
+            Winner.playerWin(player);
         }
-
-        if (MNPN.get(player.getboxId()).type.equals("Prison")) {
-            Jail(player, MNPN);
-        }
-
-        if (MNPN.get(player.getboxId()).type.equals("Fine")) {
-            FineForParking(player, MNPN);
-        }
-
-        if (MNPN.get(player.getboxId()).type.equals("Start")) {
-            Beggining(player, MNPN);
-        }
-
-        if (MNPN.get(player.getboxId()).type.equals("Street")) {
-            Street(player, MNPN, scanner);
-        }
-
     }
 
     public Integer dice(Scanner scanner, Settings settings)
@@ -89,7 +103,11 @@ public class Play {
 
             System.out.print("\033[F\033[2K"); //To delete row
 
-        } while(symbol != 'T' && symbol != 't');
+        } while(symbol != 'T' && symbol != 't' && symbol != 'E' && symbol != 'e');
+
+        if (symbol == 'E' || symbol == 'e') {
+            Exit.exitGame();
+        }
 
         System.out.println("\033[F\033[2K");
 
@@ -136,7 +154,7 @@ public class Play {
     {
 
         System.out.println();
-        System.out.println(Color.YELLOW + "Congratulations! The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the lottery box and have won:" + Color.GREEN + " +" + MNPN.get(player.boxId).win + "$" + Color.RESET);
+        System.out.println(Color.YELLOW + "Congratulations! The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the lottery box and have won:" + Color.GREEN + " [+" + MNPN.get(player.boxId).win + "$]" + Color.RESET);
 
         player.Money = player.Money + MNPN.get(player.boxId).win;
         playerStats(player);
@@ -147,7 +165,7 @@ public class Play {
     {
 
         System.out.println();
-        System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "]  went straight to jail! Moves to skip -" + Color.RESET + " " + Color.RED + MNPN.get(player.boxId).skip + Color.RESET);
+        System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] went straight to jail! Moves to skip -" + Color.RESET + " " + Color.RED + MNPN.get(player.boxId).skip + Color.RESET);
 
         player.skipMove = MNPN.get(player.boxId).skip;
         playerStats(player);
@@ -158,7 +176,7 @@ public class Play {
     {
 
         System.out.println();
-        System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] received a parking fine! Amount to pay:" + Color.RED + " -" + MNPN.get(player.boxId).fine + "$" + Color.RESET);
+        System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] received a parking fine! Amount to pay:" + Color.RED + " [-" + MNPN.get(player.boxId).fine + "$]" + Color.RESET);
 
         player.Money = player.Money - MNPN.get(player.boxId).fine;
         playerStats(player);
@@ -169,24 +187,31 @@ public class Play {
     {
 
         System.out.println();
-        System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the starting box and received:" + Color.GREEN + " +" + MNPN.get(player.boxId).win + "$" + Color.RESET);
+        System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the starting box and received:" + Color.GREEN + " [+" + MNPN.get(player.boxId).win + "$]" + Color.RESET);
 
         player.Money = player.Money + MNPN.get(player.boxId).win;
         playerStats(player);
 
     }
 
-    public void Street(actorPlay player, LinkedList<monopolyTable> MNPN, Scanner scanner)
+    public void Street(actorPlay player, LinkedList<monopolyTable> MNPN, Scanner scanner, Queue<actorPlay> playerQueue)
     {
 
-        System.out.println();
-        System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the street - " + Color.CYAN + "'" + MNPN.get(player.boxId).title + "'" + Color.RESET);
-        System.out.println();
+        if (MNPN.get(player.boxId).owner != null && MNPN.get(player.boxId).owner.equals(player.getname())) {
+            System.out.println();
+            System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on its" + Color.PURPLE + " OWN" + Color.YELLOW + " street - " + Color.CYAN + "'" + MNPN.get(player.boxId).title + "'" + Color.RESET);
+        } else {
+            System.out.println();
+            System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the street - " + Color.CYAN + "'" + MNPN.get(player.boxId).title + "'" + Color.RESET);
+            System.out.println();
+        }
 
         if (MNPN.get(player.boxId).owner == null) {
             System.out.println(Color.YELLOW + "The street: " + Color.CYAN + MNPN.get(player.boxId).title + Color.YELLOW + " is available in the shop!" + Color.RESET);
             System.out.println(Color.RED + "The price is: " + Color.GREEN + MNPN.get(player.boxId).price + "$" + Color.RESET);
+
             char symbol;
+
             do
             {
 
@@ -197,19 +222,67 @@ public class Play {
 
                 System.out.print("\033[F\033[2K"); //To delete row
 
-            } while(symbol != 'Y' && symbol != 'y' && symbol != 'N' && symbol != 'n');
+            } while(symbol != 'Y' && symbol != 'y' && symbol != 'N' && symbol != 'n' && symbol != 'E' && symbol != 'e');
+
+            if (symbol == 'E' || symbol == 'e') {
+                Exit.exitGame();
+            }
 
             if (symbol == 'Y' || symbol == 'y') {
+                if (player.Money >= MNPN.get(player.boxId).price) {
+                    System.out.print("\033[F\033[2K");
+                    System.out.print("\033[F\033[2K");
+                    System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "]" + Color.GREEN + " SUCCESFULLY" + Color.YELLOW + " bought one of available streets: " + Color.CYAN + MNPN.get(player.boxId).title + Color.YELLOW + "!" + Color.RED + " [-" + MNPN.get(player.boxId).price + "$]" + Color.RESET);
+                    player.Money = player.Money - MNPN.get(player.boxId).price;
+                    player.Streets.add(MNPN.get(player.boxId).title);
+                    player.countStreets = player.countStreets + 1;
+                    MNPN.get(player.boxId).owner = player.name;
+                } else {
+                    System.out.print("\033[F\033[2K");
+                    System.out.print("\033[F\033[2K");
+                    System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "]" + Color.RED + " HAS NOT ENOUGHT MONEY" + Color.YELLOW + " to buy one of available streets: " + Color.CYAN + MNPN.get(player.boxId).title + Color.YELLOW + "!" + Color.GREEN + " [" + MNPN.get(player.boxId).price + "$]" + Color.RESET);
+                }
+            } else {
                 System.out.print("\033[F\033[2K");
                 System.out.print("\033[F\033[2K");
-                System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] succesfully bought one of available streets: " + Color.CYAN + MNPN.get(player.boxId).title + Color.YELLOW + "!" + Color.RED + " [-" + MNPN.get(player.boxId).price + "$]" + Color.RESET);
-                player.Money = player.Money - MNPN.get(player.boxId).price;
-                player.Streets.add(MNPN.get(player.boxId).title);
-                player.countStreets = player.countStreets + 1;
+                System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "]" + Color.RED + " DECLINED" + Color.YELLOW + " to buy one of available streets: " + Color.CYAN + MNPN.get(player.boxId).title + Color.YELLOW + "!" + Color.GREEN + " [" + MNPN.get(player.boxId).price + "$]" + Color.RESET);
+            }
+
+        } else if (MNPN.get(player.boxId).owner != null && !MNPN.get(player.boxId).owner.equals(player.getname())) {
+            System.out.println(Color.YELLOW + "The street: " + Color.CYAN + MNPN.get(player.boxId).title + Color.YELLOW + " is owned by player [" + Color.PURPLE + MNPN.get(player.boxId).owner + Color.YELLOW +"]!" + Color.RESET);
+            System.out.println(Color.RED + "The rent price is: " + Color.GREEN + MNPN.get(player.boxId).rent + "$" + Color.RESET);
+
+            char symbol;
+            do
+            {
+
+                System.out.print(Color.YELLOW + "To pay rent - (P): " + Color.RESET);
+        
+                String input = scanner.next();
+                symbol = input.charAt(0);
+
+                System.out.print("\033[F\033[2K"); //To delete row
+
+            } while(symbol != 'P' && symbol != 'p' && symbol == 'E' && symbol == 'e');
+
+            if (symbol == 'E' || symbol == 'e') {
+                Exit.exitGame();
+            }
+
+            System.out.print("\033[F\033[2K");
+            System.out.print("\033[F\033[2K");
+            System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "]" + Color.GREEN + " SUCCESFULLY" + Color.YELLOW + " paid to player [" + Color.PURPLE + MNPN.get(player.boxId).owner + Color.YELLOW + "]!" + Color.RED + " [-" + MNPN.get(player.boxId).rent + "$]" + Color.RESET);
+
+            player.Money = player.Money - MNPN.get(player.boxId).rent;
+            for (actorPlay p : playerQueue) {
+                if (p.getname().equals(MNPN.get(player.boxId).owner)) {
+                    p.Money += MNPN.get(player.boxId).rent;
+                    break;
+                }
             }
 
         } else {
-
+            System.out.println(Color.GREEN + "There is nothing to do!" + Color.RESET);
         }
 
         playerStats(player);
@@ -236,7 +309,7 @@ public class Play {
     public static void sleep()
     {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             System.out.println("Sleep was interrupted.");
             Thread.currentThread().interrupt();

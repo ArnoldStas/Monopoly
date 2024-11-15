@@ -107,7 +107,11 @@ public class Settings {
             String input = scanner.next();
             symbol = input.charAt(0);
 
-        } while (symbol != 'Y' && symbol != 'y' && symbol != 'N' && symbol != 'n');
+        } while (symbol != 'Y' && symbol != 'y' && symbol != 'N' && symbol != 'n' && symbol != 'E' && symbol != 'e');
+
+        if (symbol == 'E' || symbol == 'e') {
+            Exit.exitGame();
+        }
 
         if (symbol == 'Y' || symbol == 'y') {
             changeCurrentSettings(scanner);
