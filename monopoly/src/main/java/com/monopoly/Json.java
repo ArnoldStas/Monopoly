@@ -17,7 +17,7 @@ public class Json {
     {
         Gson gson = new Gson();
 
-        try (FileReader reader = new FileReader("monopoly\\src\\json\\Monopolis_laukeliai.json")) {
+        try (FileReader reader = new FileReader("monopoly/src/json/Monopolis_laukeliai.json")) {
             Type MonopolyListType = new TypeToken<List<monopolyTable>>() {}.getType();
         
             List<monopolyTable> MNP = gson.fromJson(reader, MonopolyListType);

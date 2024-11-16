@@ -17,6 +17,20 @@ public class Table {
     public Integer win;
     public String info;
 
+    public monopolyTable(int id, String title, String type, String color, String owner, int price, int rent, int fine, int skip, int win, String info) {
+        this.id = id;
+        this.title = title;
+        this.type = type;
+        this.color = color;
+        this.owner = owner;
+        this.price = price;
+        this.rent = rent;
+        this.fine = fine;
+        this.skip = skip;
+        this.win = win;
+        this.info = info;
+    }
+
     public String toString() {
         return String.format(
             "Block: {%d, %s, %s, %s, %s, %d, %d, %d, %d, %d, - '%s'}",
