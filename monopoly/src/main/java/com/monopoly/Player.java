@@ -12,6 +12,7 @@ public class Player {
     public static class actorPlay 
 {
     public Integer Money;
+    public Integer Debt;
     public Integer countStreets;
     public List<String> Streets;
     public Integer skipMove;
@@ -20,6 +21,7 @@ public class Player {
 
     actorPlay(String name) {
         Money = 1500;
+        Debt = 0;
         countStreets = 0;
         Streets = new ArrayList<>();
         skipMove = 0;
@@ -30,6 +32,11 @@ public class Player {
     public Integer getMoney()
     {
         return Money;
+    }
+
+    public Integer getDebt()
+    {
+        return Debt;
     }
 
     public Integer getcountStreets()
@@ -198,7 +205,10 @@ public class Player {
                 System.out.println(player.getname());
 
                 System.out.print(Color.GREEN + "Money: " + Color.RESET);
-                System.out.println(player.getMoney());
+                System.out.println(player.getMoney() + "$");
+
+                System.out.print(Color.GREEN + "Debt: " + Color.RESET);
+                System.out.println(player.getDebt() + "$");
 
                 System.out.print(Color.GREEN + "Count of own streets: " + Color.RESET);
                 System.out.println(player.getcountStreets());

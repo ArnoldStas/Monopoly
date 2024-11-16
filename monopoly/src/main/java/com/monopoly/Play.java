@@ -155,8 +155,17 @@ public class Play {
 
         System.out.println();
         System.out.println(Color.YELLOW + "Congratulations! The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the lottery box and have won:" + Color.GREEN + " [+" + MNPN.get(player.boxId).win + "$]" + Color.RESET);
+        
+        if (player.getDebt() < 0) {
+            player.Debt = player.Debt + MNPN.get(player.boxId).win;
+            if (player.getDebt() > 0) {
+                player.Money = player.Money + player.getDebt();
+                player.Debt = 0;
+            }
+        } else {
+            player.Money = player.Money + MNPN.get(player.boxId).win;
+        }
 
-        player.Money = player.Money + MNPN.get(player.boxId).win;
         playerStats(player);
 
     }
@@ -178,7 +187,13 @@ public class Play {
         System.out.println();
         System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] received a parking fine! Amount to pay:" + Color.RED + " [-" + MNPN.get(player.boxId).fine + "$]" + Color.RESET);
 
-        player.Money = player.Money - MNPN.get(player.boxId).fine;
+        if (player.getMoney() - MNPN.get(player.boxId).fine < 0) {
+            player.Debt = player.Debt + (player.getMoney() - MNPN.get(player.boxId).fine);
+            player.Money = 0;
+        } else {
+            player.Money = player.Money - MNPN.get(player.boxId).fine;
+        }
+
         playerStats(player);
 
     }
@@ -189,7 +204,16 @@ public class Play {
         System.out.println();
         System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "] landed on the starting box and received:" + Color.GREEN + " [+" + MNPN.get(player.boxId).win + "$]" + Color.RESET);
 
-        player.Money = player.Money + MNPN.get(player.boxId).win;
+        if (player.getDebt() < 0) {
+            player.Debt = player.Debt + MNPN.get(player.boxId).win;
+            if (player.getDebt() > 0) {
+                player.Money = player.Money + player.getDebt();
+                player.Debt = 0;
+            }
+        } else {
+            player.Money = player.Money + MNPN.get(player.boxId).win;
+        }
+
         playerStats(player);
 
     }
@@ -273,7 +297,13 @@ public class Play {
             System.out.print("\033[F\033[2K");
             System.out.println(Color.YELLOW + "The player [" + Color.PURPLE + player.getname() + Color.YELLOW + "]" + Color.GREEN + " SUCCESFULLY" + Color.YELLOW + " paid to player [" + Color.PURPLE + MNPN.get(player.boxId).owner + Color.YELLOW + "]!" + Color.RED + " [-" + MNPN.get(player.boxId).rent + "$]" + Color.RESET);
 
-            player.Money = player.Money - MNPN.get(player.boxId).rent;
+            if (player.getMoney() - MNPN.get(player.boxId).rent < 0) {
+                player.Debt = player.Debt + (player.getMoney() - MNPN.get(player.boxId).rent);
+                player.Money = 0;
+            } else {
+                player.Money = player.Money - MNPN.get(player.boxId).rent;
+            }
+
             for (actorPlay p : playerQueue) {
                 if (p.getname().equals(MNPN.get(player.boxId).owner)) {
                     p.Money += MNPN.get(player.boxId).rent;
@@ -295,6 +325,7 @@ public class Play {
         System.out.println();
         System.out.println(Color.BACKGROUND_RED + player.getname() + "'s STATS" + Color.RESET);
         System.out.println(Color.BLUE + "Current money: " + Color.GREEN + player.Money + "$" + Color.RESET);
+        System.out.println(Color.BLUE + "Debt: " + Color.RED + player.Debt + "$" + Color.RESET);
         System.out.println(Color.BLUE + "Streets (" + Color.PURPLE + player.countStreets + Color.BLUE + "): " + Color.YELLOW + Arrays.toString(player.getStreets()) + Color.RESET);
         if (player.skipMove > 0) {
             System.out.println(Color.BLUE + "In jail? -" + Color.RED + " YES" + Color.RESET);

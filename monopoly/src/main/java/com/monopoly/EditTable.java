@@ -60,7 +60,7 @@ public class EditTable {
     public void createBox(LinkedList<monopolyTable> MNPN, Scanner scanner, int currentIndex)
     {
 
-        Integer newBoxId = 0;
+        Integer newBoxId = null;
 
         do
         {
@@ -76,13 +76,15 @@ public class EditTable {
 
             if (scanner.hasNextInt()) {
                 newBoxId = scanner.nextInt();
+                if (newBoxId < 0 || newBoxId > MNPN.size()) {
+                    newBoxId = null;
+                }
             } else {
                 scanner.nextLine();
-                continue;
             }
             System.out.println();
 
-        } while (newBoxId < 0 || newBoxId >= MNPN.size() + 1);
+        } while (newBoxId == null);
 
         parametersBox(newBoxId, scanner, MNPN, currentIndex);
 
@@ -131,7 +133,7 @@ public class EditTable {
 
     public void deleteByID(LinkedList<monopolyTable> MNPN, Scanner scanner, int currentIndex)
     {
-        Integer deleteBoxId = 0;
+        Integer deleteBoxId = null;
 
         do
         {
@@ -149,13 +151,16 @@ public class EditTable {
 
             if (scanner.hasNextInt()) {
                 deleteBoxId = scanner.nextInt();
+                if (deleteBoxId < 0 || deleteBoxId > size) {
+                    deleteBoxId = null;
+                }
             } else {
                 scanner.nextLine();
                 continue;
             }
             System.out.println();
 
-        } while (deleteBoxId < 0 || deleteBoxId >= MNPN.size());
+        } while (deleteBoxId == null);
 
         System.out.println(Color.RED + "DELETE - " + Color.YELLOW + deleteBoxId + " " + Color.PURPLE + MNPN.get(deleteBoxId) + Color.RESET);
 
@@ -249,17 +254,39 @@ public class EditTable {
                         if (index == indicatesToDelete.get(i)) {
                             validID = true;
                             break;
-                        } else {
-                            continue;
                         }
                     }
                 } else {
                     scanner.nextLine();
-                    continue;
                 }
                 System.out.print("\033[F\033[2K"); //To delete row
+
             } while (!validID);
 
+            System.out.println(Color.RED + "DELETE - " + Color.YELLOW + indicatesToDelete.get(index) + " " + Color.PURPLE + MNPN.get(indicatesToDelete.get(0)) + Color.RESET);
+
+            char symbol;
+
+            do
+            {
+
+                System.out.print(Color.YELLOW + "Do you want to proceed? (Y/N): " + Color.RESET);
+        
+                String input = scanner.next();
+                symbol = input.charAt(0);
+
+                System.out.print("\033[F\033[2K"); //To delete row
+
+            } while(symbol != 'Y' && symbol != 'y' && symbol != 'N' && symbol != 'n');
+
+            if (symbol == 'Y' || symbol == 'y') {
+                System.out.println(Color.GREEN + "The action was confirmed - " + Color.RED + "DELETE" + Color.RESET);
+                Play.sleep();
+                MNPN.remove((int) indicatesToDelete.get(index));
+                currentTable(scanner, MNPN, currentIndex);
+            } else {
+                deleteBox(MNPN, scanner, currentIndex);
+            }
 
         } else {
 
@@ -287,7 +314,6 @@ public class EditTable {
             } else {
                 deleteBox(MNPN, scanner, currentIndex);
             }
-
         }
     }
 
@@ -392,10 +418,14 @@ public class EditTable {
         }
 
         if (choice == 11) {
-            DONE(id, title, type, color, owner, price, rent, fine, skip, win, info, scanner, MNPN, currentIndex);
+            if (type == null) {
+                System.out.println(Color.YELLOW + "To be done, you must set {" + Color.RED + "TYPE" + Color.YELLOW + "} option!" + Color.RESET);
+                Play.sleep();
+                addParameters(id, title, type, color, owner, price, rent, fine, skip, win, info, scanner, MNPN, currentIndex);
+            } else {
+                DONE(id, title, type, color, owner, price, rent, fine, skip, win, info, scanner, MNPN, currentIndex);
+            }
         }
-
-
     }
 
     private static String getStr(Scanner scanner)
@@ -446,7 +476,7 @@ public class EditTable {
             System.out.println();
             System.out.println(Color.CYAN + "| BOX PARAMETERS |" + Color.YELLOW + " - TYPE" + Color.RESET);
             System.out.println();
-            System.out.println(Color.GREEN + "Available: " + Color.YELLOW + "{Street, Lottery, Prison, Fine, Start}" + Color.RESET);
+            System.out.println(Color.GREEN + "Available: " + Color.YELLOW + "{Street, Lottery, Prison, Fine, Start} - " + Color.RED + "Case sensitive!" + Color.RESET);
             System.out.print(Color.RED + "TYPE: " + Color.RESET);
 
             type = getStr(scanner);
