@@ -182,6 +182,11 @@ public class EditTable {
             System.out.println(Color.GREEN + "The action was confirmed - " + Color.RED + "DELETE" + Color.RESET);
             Play.sleep();
             MNPN.remove((int) deleteBoxId);
+
+            for (int i = 0; i < MNPN.size(); i++) {
+                MNPN.get(i).id = i;
+            }
+
             currentTable(scanner, MNPN, currentIndex);
 
         } else {
@@ -283,6 +288,11 @@ public class EditTable {
                 System.out.println(Color.GREEN + "The action was confirmed - " + Color.RED + "DELETE" + Color.RESET);
                 Play.sleep();
                 MNPN.remove((int) indicatesToDelete.get(index));
+
+                for (int i = 0; i < MNPN.size(); i++) {
+                    MNPN.get(i).id = i;
+                }
+
                 currentTable(scanner, MNPN, currentIndex);
             } else {
                 deleteBox(MNPN, scanner, currentIndex);
@@ -310,6 +320,11 @@ public class EditTable {
                 System.out.println(Color.GREEN + "The action was confirmed - " + Color.RED + "DELETE" + Color.RESET);
                 Play.sleep();
                 MNPN.remove((int) indicatesToDelete.get(0));
+
+                for (int i = 0; i < MNPN.size(); i++) {
+                    MNPN.get(i).id = i;
+                }
+
                 currentTable(scanner, MNPN, currentIndex);
             } else {
                 deleteBox(MNPN, scanner, currentIndex);
@@ -689,6 +704,16 @@ public class EditTable {
             info
         );
         MNPN.add(id, newBox);
+
+        for (int i = 0; i < MNPN.size(); i++) {
+            if (i == id){
+                for (int j = i + 1; j < MNPN.size(); j++)
+                {
+                    MNPN.get(j).id = MNPN.get(j).id + 1;
+                }
+            }
+        }
+        
         currentTable(scanner, MNPN, currentIndex);
     }
 }
